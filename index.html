@@ -7,6 +7,20 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Personen</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody id="personTableBody">
+
+        </tbody>
+    </table>
+
+    <input type="text" id="name"> <button onclick="addPersonEntry()" type="button">save</button>
     <h1>Rekenmachine</h1>
     <input id="input1" type="text" placeholder="Enter a number">
     <input id="input2" type="text" placeholder="Enter a number">
@@ -15,7 +29,62 @@
     <span id="answer"> </span>
 
     <script>
-        
+
+        function addPersonEntry() {
+            var nieuweNaam = document.getElementById("name").value;
+
+            let newPerson = {
+                name: nieuweNaam
+            }
+
+            fetch("http://localhost:8080/maakpersoonaan", {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(newPerson)
+             })       // 1
+            .then(response => {
+                alert('is goed gegaan')
+            })
+            .catch(error => {
+                alert('er is iets fout gegaan')
+            })
+        }
+        // Fetch api
+
+        // 1. Roep een url aan
+        // 2. zet antwoord om naar JSON object
+        // 3. Vul tabel
+        function fillTable(persons) {
+            let personsTableHtml = '';
+
+            for (let person of persons) {
+                personsTableHtml += `<tr> 
+                    <td>${person.id} </td>
+                    <td>${person.name}</td>
+                </tr>`;
+            }
+
+            // Setting innerHTML as tab variable
+            document.getElementById("personTableBody").innerHTML = personsTableHtml;
+        }
+
+        // fetch("http://localhost:8080/maakpersoonaan", {
+        //     method: "POST",
+        //     headers: {
+        //         'Content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(newPerson)
+        // })       // 1
+        //     .then(response => {
+        //         alert('is goed gegaan')
+        //     })
+        //     .catch(error => {
+        //         alert('er is iets fout gegaan')
+        //     })
+
+
         function Calculate(){
             var firstNum = document.getElementById("input1").value
             var secondNum = document.getElementById("input2").value
@@ -24,7 +93,6 @@
             var secondnumInt = parseInt(secondNum)
 
             var answer = firstnumInt+secondnumInt
-            console.log(answer)
             document.getElementById("answer").innerText = answer
         }
 
